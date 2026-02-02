@@ -304,6 +304,39 @@ compute_RMSE(pred, test, print = T)
 Let's finally try on our own implementation of WNN
 
 ```{r}
+wnn_model <- WNN$new(K = 3, p = 12)
+wnn_model$fit(train)
+```
 
+```{r}
+pred <- wnn_model$predict(h = 96)
+autoplot(train) + autolayer(pred)
+```
+
+```{r}
+autoplot(pred) + autolayer(test)
+```
+
+
+```{r}
+compute_RMSE(pred, test, print = T)
+```
+
+It is our best model. We can train it on the full dataset and predict the future 96 lags
+
+```{r}
+wnn_model <- WNN$new(K = 3, p = 12)
+wnn_model$fit(clean_power)
+```
+
+```{r}
+final_pred <- wnn_model$predict(h = 96)
+autoplot(clean_power) + autolayer(final_pred)
+```
+
+## Export final prediction to CSV
+
+```{r}
+write.csv(final_pred, file="../prediction/forecast.csv")
 ```
 
