@@ -1,0 +1,2 @@
+"0","sanfran <-read.csv(""/Users/marinnagy/Documents/SISE/Serie temporelle/San Francisco/sanfran.csv"")"
+"0","sanfran <- ts(sanfran, start=1932, frequency=12)"

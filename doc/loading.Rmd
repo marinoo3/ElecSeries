@@ -1,0 +1,66 @@
+---
+title: "Load data"
+output: html_document
+date: "2025-12-15"
+---
+
+```{r}
+library(fpp2)
+```
+
+
+Load CSV
+```{r}
+dat <- read.csv("../../Elec-train.csv")
+dat$Timestamp <- as.POSIXct(dat$Timestamp, format = "%m/%d/%Y %H:%M", tz = "UTC")
+```
+
+Split data and truncate power to end on `2/18/2010 23:45`
+```{r}
+last_power_index <- tail(which(!is.na(dat[, "Power"])), 1)
+power_dat <- dat[, "Power"][1:last_power_index]
+
+temp_dat <- dat[, "Temp"]
+```
+
+
+Create `ts` objects
+```{r}
+freq <- 4*24                       # 96 observations per day
+start.date <- as.POSIXlt(dat[, "Timestamp"], tz = "UTC")
+
+start.day  <- as.numeric(format(start.date, "%j"))
+start.slot <- as.numeric(format(start.date, "%H"))*4 +
+              as.numeric(format(start.date, "%M"))/15 + 1
+```
+
+```{r}
+power <- ts(power_dat,
+           frequency = freq,
+           start = c(start.day, start.slot))
+
+temp <- ts(temp_dat,
+           frequency = freq,
+           start = c(start.day, start.slot))
+```
+
+
+Plot
+```{r}
+autoplot(temp) + autolayer(power)
+```
+
+```{r}
+start(power)
+end(power)
+start(temp)
+end(temp)
+```
+
+
+Save as .rda
+```{r}
+save(power, file = "../data/power.rda")
+save(temp, file = "../data/temp.rda")
+```
+

@@ -1,0 +1,88 @@
+---
+title: "elecdaily"
+output: html_document
+date: "2025-12-08"
+---
+
+Import libraries
+```{r}
+library(fpp2)
+```
+
+Load data
+```{r}
+elec <- elecdaily
+print(frequency(elec))
+print(end(elec))
+```
+
+Plot data
+```{r}
+autoplot(elec)
+```
+
+```{r}
+autoplot(decompose(elec[, 1], type='additive')) + xlab('Day')
+```
+
+
+
+
+Train Test split
+```{r}
+train <- window(elec, end=c(51, 3))
+test <- window(elec, start=c(51, 4))
+workdays <- elec[, 2]
+temperature <- elec[, 3]
+```
+
+```{r}
+plot(workdays, train[, 1])
+```
+
+```{r}
+plot(temperature, train[, 1])
+```
+
+```{r}
+temperature = (elec[, 3] - 25)^2
+plot(temperature, train[, 1])
+```
+
+
+ARIMA
+
+```{r}
+ggtsdisplay(diff(diff(train[, 1], lag=7)))
+```
+
+
+```{r}
+fit <- Arima(train[, 1], order=c(1, 1, 0), seasonal = c(1, 1, 0))
+fit %>% residuals() %>% ggtsdisplay()
+```
+
+```{r}
+fit <- Arima(train[, 1], order=c(6, 1, 0), seasonal = c(3, 1, 0))
+checkresiduals(fit)
+summary(fit)
+```
+
+Dynamic regression
+```{r}
+temp <- (train[,"Temperature"]-25)^2
+fit1 <- Arima(train[, "Demand"], xreg=cbind(train[,"WorkDay"], temp), order=c(6, 1, 0), seasonal = c(3, 1, 0))
+summary(fit1)
+```
+
+```{r}
+checkresiduals(fit1)
+```
+
+Test the model
+```{r}
+temp <- (test[,"Temperature"]-25)^2
+plot(forecast(fit1, xreg=cbind(test[,"WorkDay"], temp)))
+```
+
+

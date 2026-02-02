@@ -1,0 +1,2 @@
+"0","fit <- Arima(train[, 1], order=c(1, 1, 0), seasonal = c(1, 1, 0))"
+"0","fit %>% residuals() %>% ggtsdisplay()"

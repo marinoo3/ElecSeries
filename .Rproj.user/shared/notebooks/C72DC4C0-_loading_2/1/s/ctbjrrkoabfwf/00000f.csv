@@ -1,0 +1,4 @@
+"0","last_power_index <- tail(which(!is.na(dat[, ""Power""])), 1)"
+"0","power_dat <- dat[, ""Power""][1:last_power_index]"
+"0",""
+"0","temp_dat <- dat[, ""Temp""]"

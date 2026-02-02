@@ -1,0 +1,1 @@
+"0","autoplot(decompose(elec[, 1], type='additive')) + xlab('Day')"

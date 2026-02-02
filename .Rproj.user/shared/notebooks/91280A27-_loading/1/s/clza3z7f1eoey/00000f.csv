@@ -1,0 +1,5 @@
+"0","start <- c(as.integer(format(dat$Timestamp[1], ""%Y"")), slot[1])"
+"0","temp_end   <- c(as.integer(format(dat$Timestamp[nrow(dat)], ""%Y"")), slot[nrow(dat)])"
+"0",""
+"0","last_non_na_power <- tail(which(!is.na(dat[, ""Power""])), 1)"
+"0","power_end <- c(as.integer(format(dat$Timestamp[last_non_na_power], ""%Y"")), slot[last_non_na_power])"

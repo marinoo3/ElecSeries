@@ -1,0 +1,4 @@
+"0","train <- window(elec, end=c(51, 3))"
+"0","test <- window(elec, start=c(51, 4))"
+"0","workdays <- elec[, 2]"
+"0","temperature <- elec[, 3]"

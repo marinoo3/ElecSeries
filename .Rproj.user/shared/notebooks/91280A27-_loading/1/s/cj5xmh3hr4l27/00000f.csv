@@ -1,0 +1,4 @@
+"0","freq <- 52*7*24*4"
+"0",""
+"0","quarter <- function(x)"
+"0","  4*as.integer(format(x, ""%H"")) + as.integer(format(x, ""%M""))/15 + 1"

@@ -1,0 +1,3 @@
+"0","temp <- (test[,""Temperature""]-25)^2"
+"0","plot(forecast(fit1, xreg=cbind(test[,""WorkDay""], temp)))"
+"2","Warning: xreg contains different column names from the xreg used in training. Please check that the regressors are in the same order."

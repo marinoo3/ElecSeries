@@ -1,0 +1,2 @@
+"0","temperature = (elec[, 3] - 25)^2"
+"0","plot(temperature, train[, 1])"

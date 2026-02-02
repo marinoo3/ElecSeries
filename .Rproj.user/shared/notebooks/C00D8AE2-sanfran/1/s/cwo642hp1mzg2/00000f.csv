@@ -1,0 +1,6 @@
+"0","m <- mean(train_data)"
+"0","s <- sd(train_data)"
+"0","train_data_norm <- (train_data - m) / s"
+"0","test_data_norm <- (test_data - m) / s"
+"0","autoplot(train_data_norm, series=""train"")+"
+"0","autolayer(test_data_norm, series=""test"")"

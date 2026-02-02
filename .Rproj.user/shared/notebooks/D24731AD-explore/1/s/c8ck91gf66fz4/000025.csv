@@ -1,0 +1,6 @@
+"0","clean_power <- power"
+"0","#window(clean_power, start = start(pred$mean), end = end(pred$mean)) <- pred$mean"
+"0",""
+"0","clean_power[zero_idx] <- pred$mean"
+"0","autoplot(clean_power)"
+"0",""

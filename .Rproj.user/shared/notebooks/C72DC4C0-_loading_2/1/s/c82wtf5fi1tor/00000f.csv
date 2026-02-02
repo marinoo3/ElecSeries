@@ -1,0 +1,2 @@
+"0","dat <- read.csv(""../../Elec-train.csv"")"
+"0","dat$Timestamp <- as.POSIXct(dat$Timestamp, format = ""%m/%d/%Y %H:%M"", tz = ""UTC"")"

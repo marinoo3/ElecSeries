@@ -1,0 +1,29 @@
+WWN <- R6::R6Class(
+  "WWN",
+
+  private = list(
+
+  ),
+
+  public = list(
+
+    #' Create a WWN object
+    #' @param K The number of neighbours to select
+    #' @param p The number of past periods to use
+    initialize = function(K, p) {
+
+    }
+
+    #' Fit the WWN model to training data
+    #' @param X A timeserie to fit the model
+    fit = function(X) {
+
+    }
+
+    #' Predict the next values on h periods
+    #' @param h the number of periods to predict
+    predict = function(h) {
+
+    }
+  )
+)

@@ -1,0 +1,2 @@
+"0","train <- window(clean_power, end = c(48, 96))"
+"0","test <- window(clean_power, start = c(49, 1))"

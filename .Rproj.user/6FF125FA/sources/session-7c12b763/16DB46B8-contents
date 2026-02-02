@@ -1,0 +1,105 @@
+---
+title: "VAR"
+output: html_document
+date: "2025-12-15"
+---
+
+## Imports
+```{r}
+library(fpp2)
+library(testcorr)
+library(vars)
+```
+
+## Load data
+```{r}
+data("uschange")
+start(uschange)
+end(uschange)
+frequency(uschange)
+```
+
+## Train test split
+```{r}
+train <- window(uschange, end=c(2015, 4))
+test <- window(uschange, start=c(2016, 1))
+```
+
+
+```{r}
+autoplot(train)
+```
+
+```{r}
+len <- length(colnames(train))
+len
+```
+
+
+## Correlation
+```{r}
+len <- length(colnames(train))
+for (i in 1:(len-1)) {
+  for (j in (i+1):len) {
+    col1_name <- colnames(train)[i]
+    col2_name <- colnames(train)[j]
+    ccf(train[,i],train[,j], main=paste(col1_name, "x", col2_name))
+  }
+}
+```
+
+## Cross correlation
+```{r}
+cc.test(train[,"Consumption"],train[,"Income"],max.lag = 1,
+plot = FALSE,)
+```
+
+```{r}
+VARselect(train, lag.max=8, type="const",season=4)
+```
+```{r}
+var <- VAR(train, p=3, type = "const", season = 4, exogen=NULL)
+summary(var)
+```
+
+```{r}
+serial.test(var, lags.pt=10, type="PT.asymptotic")
+```
+
+```{r}
+fcst <- forecast(var, h=3)
+plot(fcst, xlab="Year") 
+```
+
+
+```{r}
+len <- length(colnames(test))
+for (i in 1:len) {
+  rmse <- sqrt(mean(test[,i] - fcst$forecast[[i]]$mean)^2)
+  print(paste(colnames(test)[i], ":", rmse))
+}
+```
+
+## Compare with arima
+```{r}
+models <- list()
+len <- length(colnames(train))
+for (i in 1:len) {
+  mod <- auto.arima(train[,i])
+  pred <- forecast(mod, h=3)
+  models[i] <- pred$mean
+}
+```
+
+```{r}
+len <- length(models)
+for (i in 1:len) {
+  rmse <- sqrt(mean(test[,i] - models[i])^2)
+  print(paste(colnames(test)[i], ":", rmse))
+}
+```
+
+```{r}
+test <- models[1]
+```
+

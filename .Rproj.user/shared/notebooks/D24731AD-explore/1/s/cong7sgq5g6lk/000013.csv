@@ -1,0 +1,7 @@
+"0","K <- 3                        # number of harmonics you want"
+"0","xreg <- fourier(train, K = K) # length = length(train), period = frequency(train)"
+"0",""
+"0","arima_fit <- Arima(train,"
+"0","             order = c(0, 2, 0),"
+"0","             seasonal = c(0, 1, 1),  # no seasonal AR/MA terms"
+"0","             xreg = xreg)"

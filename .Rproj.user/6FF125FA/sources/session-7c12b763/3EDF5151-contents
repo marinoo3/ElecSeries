@@ -1,0 +1,75 @@
+---
+title: "sanfran"
+output: html_document
+date: "2025-12-05"
+---
+
+Import libraries
+```{r}
+library(fpp2)
+library(keras3)
+library(tensorflow)
+```
+
+Load data
+```{r}
+sanfran <-read.csv("/Users/marinnagy/Documents/SISE/Serie temporelle/San Francisco/sanfran.csv")
+sanfran <- ts(sanfran, start=1932, frequency=12)
+```
+
+Plot data
+```{r}
+plot(sanfran)
+```
+
+
+## NNAR
+
+```{r}
+fit <- nnetar(sanfran)
+print(fit)
+```
+
+```{r}
+plot(forecast(fit, h=30))
+```
+
+
+## RNN
+
+Train / test split
+```{r}
+train_data <- window(sanfran, end = c(1964, 12))
+test_data <- window(sanfran, start = c(1965, 1))
+```
+
+Plot
+```{r}
+autoplot(train_data, series="train")+
+autolayer(test_data, series="test")
+```
+Normalize
+```{r}
+m <- mean(train_data)
+s <- sd(train_data)
+train_data_norm <- (train_data - m) / s
+test_data_norm <- (test_data - m) / s
+autoplot(train_data_norm, series="train")+
+autolayer(test_data_norm, series="test")
+```
+
+Build sequences
+```{r}
+create_sequences <- function(data, window_size) {
+  X <- list()
+  Y <- list()
+  for (i in 1:(length(data) - window_size)) {
+    X[[i]] <- data[i:(i + window_size - 1)]
+    Y[[i]] <- data[i + window_size]
+  }
+  X <- array(unlist(X), dim=c(length(X), window_size, 1))
+  Y <- unlist(Y)
+  return(list(X = X, Y = Y))
+}
+```
+
