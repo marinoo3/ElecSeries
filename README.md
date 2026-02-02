@@ -15,6 +15,13 @@ library(mmrClustVar)
 ```
 
 ## Usage
+
+Import package
+```R
+library(Elecseries)
+```
+
+Fit / predict
 ```R
 model <- WNN$new(K = 3, p = 12)
 model$fit(data.ts)
