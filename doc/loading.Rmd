@@ -11,7 +11,7 @@ library(fpp2)
 
 Load CSV
 ```{r}
-dat <- read.csv("../../Elec-train.csv")
+dat <- read.csv("../data-raw/Elec-train.csv")
 dat$Timestamp <- as.POSIXct(dat$Timestamp, format = "%m/%d/%Y %H:%M", tz = "UTC")
 ```
 

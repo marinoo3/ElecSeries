@@ -1,2 +1,0 @@
-"0","train_light <- tail(train, 1000)"
-"0","arima_fit <- Arima(train_light, order = c(0, 2, 0), seasonal = c(3, 1, 1))"

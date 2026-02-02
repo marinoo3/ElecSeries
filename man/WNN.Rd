@@ -5,6 +5,11 @@
 \alias{WNN}
 \title{Weighted nearest neighbours for time series forecasting}
 \description{
+Weighted nearest neighbours for time series forecasting
+
+Weighted nearest neighbours for time series forecasting
+}
+\details{
 R6 class implementing a weighted nearest neighbours (WNN) algorithm
 for univariate time series forecasting. The model uses the last \emph{p}
 observations as a window, searches for the \emph{K} most similar historical
@@ -24,6 +29,7 @@ the neighbours' subsequent observations.
 \if{html}{\out{<a id="method-WNN-new"></a>}}
 \if{latex}{\out{\hypertarget{method-WNN-new}{}}}
 \subsection{Method \code{new()}}{
+Create a WNN object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{WNN$new(K, p)}\if{html}{\out{</div>}}
 }
@@ -33,8 +39,7 @@ the neighbours' subsequent observations.
 \describe{
 \item{\code{K}}{The number of neighbours to select}
 
-\item{\code{p}}{The number of past periods to use (window size)
-Fit the WNN model to training data}
+\item{\code{p}}{The number of past periods to use (window size)}
 }
 \if{html}{\out{</div>}}
 }
@@ -43,6 +48,7 @@ Fit the WNN model to training data}
 \if{html}{\out{<a id="method-WNN-fit"></a>}}
 \if{latex}{\out{\hypertarget{method-WNN-fit}{}}}
 \subsection{Method \code{fit()}}{
+Fit the WNN model to training data
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{WNN$fit(X)}\if{html}{\out{</div>}}
 }

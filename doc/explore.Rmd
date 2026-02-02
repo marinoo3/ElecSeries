@@ -3,6 +3,9 @@ Imports
 ```{r}
 library(fpp2)
 library(ggplot2)
+library(keras3)
+library(tensorflow)
+library(Elecseries)
 ```
 
 Load data
@@ -140,23 +143,7 @@ ggtsdisplay(diff(diff(train, lag=96), differences = 2))
 ```
 We used 1 seasonal diff and 2 regular diff to get as close a possible to a white noise. We can see a nice exponential curve on PACF with a peak on the 96th lag. There is also what looks like an exponential curve on ACF with peaks on 1th, 2nd and 3rd season lags. Thereforce we can try a SARIMA(0, 2, 0)(3, 1, 1)
 
-```{r}
-arima_fit <- Arima(train, order = c(0, 2, 0), seasonal = c(0, 1, 1))
-arima_fit %>% residuals() %>% ggtsdisplay()
-```
-
-```{r}
-summary(auto_fit)
-```
-
-```{r}
-arima_fit <- Arima(train, order = c(0, 2, 13), seasonal = c(0, 1, 1))
-arima_fit %>% residuals() %>% ggtsdisplay()
-```
-
-
-
-There is now what looks like an exponential curve on the AFC too, let's add auto regressif of order 94
+I'll use a subset of the train set (1000 observations) cause my computer can't handle fitting the model on the entire train data
 
 ```{r}
 train_light <- tail(train, 1000)
@@ -165,14 +152,158 @@ arima_fit %>% residuals() %>% ggtsdisplay()
 ```
 
 ```{r}
-xreg <- fourier(train, K = 3)
+pred <- forecast(arima_fit, h = 96)
+autoplot(pred$mean) + autolayer(test)
+```
 
-arima_fit <- Arima(train,
-             order = c(0, 2, 0),
-             seasonal = c(0, 1, 1),  # no seasonal AR/MA terms
-             xreg = xreg)
+```{r}
+compute_RMSE(pred$mean, test, print = T)
+```
+
+We can try to compare the model without season lags on auto regressive side
+
+```{r}
+arima_fit <- Arima(train, order = c(0, 2, 0), seasonal = c(0, 1, 1))
 arima_fit %>% residuals() %>% ggtsdisplay()
 ```
 
+```{r}
+pred <- forecast(arima_fit, h = 96)
+```
 
+```{r}
+autoplot(pred$mean) + autolayer(test)
+```
+
+```{r}
+compute_RMSE(pred$mean, test, print = T)
+```
+
+It is much better. We've reach the limit of what I can do with SARIMA on this dataset. Our best model was this last ARIMA(0, 2, 0)(0, 1, 1), even tho the auto.arima did better with a ARIMA(4,0,0)(0,1,0)...
+
+## NNAR
+
+```{r}
+nnar_fit <- nnetar(train)
+```
+
+```{r}
+pred <- forecast(nnar_fit, h = 96)
+autoplot(pred$mean) + autolayer(test)
+```
+
+```{r}
+compute_RMSE(pred$mean, test, print = T)
+```
+
+Not as good a out current best Holt Winters
+
+## RNN
+
+Normalize the data
+
+```{r}
+m <- mean(train)
+s <- sd(test)
+
+train_data_norm <- (train - m) / s
+test_data_norm <- (test- m) / s
+
+autoplot(train_data_norm, series="train")+
+autolayer(test_data_norm, series="test")
+```
+
+`create_sequence` function. To build sequence of data
+
+```{r}
+create_sequences <- function(data, window_size) {
+  X <- list()
+  Y <- list()
+  for (i in 1:(length(data) - window_size)) {
+    X[[i]] <- data[i:(i + window_size - 1)]
+    Y[[i]] <- data[i + window_size]
+  }
+  X <- array(unlist(X), dim=c(length(X), window_size, 1))
+  Y <- unlist(Y)
+  return(list(X = X, Y = Y))
+}
+```
+
+X and y data split
+
+```{r}
+train_sequences <- create_sequences(train_data_norm, window_size = 96)
+test_sequences <- create_sequences(test_data_norm, window_size = 90)
+
+X_train <- train_sequences$X
+Y_train <- train_sequences$Y
+X_test <- test_sequences$X
+Y_test <- test_sequences$Y
+```
+
+Build and train model
+
+```{r}
+model <- keras_model_sequential() %>%
+  layer_simple_rnn(units = 50, activation = 'tanh', input_shape = c(96, 1)) %>%
+  layer_dense(units = 1)
+
+model %>% compile(
+  loss = 'mean_squared_error',
+  optimizer = 'adam'
+)
+
+history <- model %>% fit(
+  X_train, Y_train,
+  epochs = 50,
+  batch_size = 16,
+  validation_data = list(X_test, Y_test)
+)
+```
+
+Recursive forecasting function
+
+```{r}
+predict_recursive <- function(model, initial_sequence, n_ahead = 96, m, s) {
+  preds <- numeric(n_ahead)
+  input_seq <- initial_sequence
+  
+  for (i in 1:n_ahead) {
+    input_array <- array(input_seq,
+    dim = c(1,length(input_seq), 1))
+    next_pred <- model %>% predict(input_array)
+    preds[i] <- next_pred
+    input_seq <- c(input_seq[-1],as.numeric(next_pred))
+  }
+  
+  preds_denorm <- preds * s + m
+  
+  return(preds_denorm)
+}
+```
+
+```{r}
+initial_seq <- as.numeric(tail(train_data_norm, 96))
+y_pred <- predict_recursive(model, initial_seq, n_ahead = 96, m, s)
+```
+
+```{r}
+pred = ts(y_pred, start = start(test), end = end(test), frequency = 96)
+```
+
+```{r}
+autoplot(train) + autolayer(pred)
+```
+
+```{r}
+compute_RMSE(pred, test, print = T)
+```
+
+## WNN
+
+Let's finally try on our own implementation of WNN
+
+```{r}
+
+```
 

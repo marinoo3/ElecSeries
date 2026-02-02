@@ -1,2 +1,0 @@
-"0","power = ts(dat[, ""Power""], frequency = freq, start = start, end = power_end)"
-"0","temp = ts(dat[, ""Temp""], frequency = freq, start = start, end = temp_end)"

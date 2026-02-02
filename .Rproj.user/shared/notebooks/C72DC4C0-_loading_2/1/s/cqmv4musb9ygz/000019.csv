@@ -1,7 +1,0 @@
-"0","power <- ts(power_dat,"
-"0","           frequency = freq,"
-"0","           start = c(start.day, start.slot))"
-"0",""
-"0","temp <- ts(temp_dat,"
-"0","           frequency = freq,"
-"0","           start = c(start.day, start.slot))"

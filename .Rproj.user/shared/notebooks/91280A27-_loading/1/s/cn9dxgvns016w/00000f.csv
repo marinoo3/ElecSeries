@@ -1,2 +1,0 @@
-"0","yday <- as.integer(format(dat$Timestamp, ""%j""))"
-"0","slot <- (yday - 1) * 96 + quarter(dat$Timestamp)"

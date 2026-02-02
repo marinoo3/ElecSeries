@@ -1,2 +1,0 @@
-"0","pred <- forecast(outlayers_fit, h = 11)"
-"0","autoplot(train) + autolayer(pred$mean)"

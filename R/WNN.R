@@ -20,6 +20,7 @@ WNN <- R6::R6Class(
 
   public = list(
 
+    #' @description
     #' Create a WNN object
     #' @param K The number of neighbours to select
     #' @param p The number of past periods to use (window size)
@@ -33,6 +34,7 @@ WNN <- R6::R6Class(
       private$p <- as.integer(p)
     },
 
+    #' @description
     #' Fit the WNN model to training data
     #' @param X A numeric or ts time series to fit the model
     fit = function(X) {

@@ -1,2 +1,0 @@
-"0","hw_fit <- HoltWinters(train)"
-"0","pred <- forecast(hw_fit, h = 96)"

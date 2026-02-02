@@ -1,6 +1,0 @@
-"0","freq <- 4*24                       # 96 observations per day"
-"0","start.date <- as.POSIXlt(dat[, ""Timestamp""], tz = ""UTC"")"
-"0",""
-"0","start.day  <- as.numeric(format(start.date, ""%j""))"
-"0","start.slot <- as.numeric(format(start.date, ""%H""))*4 +"
-"0","              as.numeric(format(start.date, ""%M""))/15 + 1"

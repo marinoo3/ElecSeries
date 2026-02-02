@@ -1,8 +1,0 @@
-"0","compute_RMSE <- function(y_pred, y_true, print=FALSE) {"
-"0","  rmse <- sqrt(mean((y_true - y_pred)^2))"
-"0","  if(print) {"
-"0","    paste(""RMSE: "", rmse)"
-"0","  } else {"
-"0","    return(rmse)"
-"0","  }"
-"0","}"
